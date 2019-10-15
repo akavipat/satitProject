@@ -536,7 +536,7 @@
         @if($student->grade_level >= 12)
             <p>to be permitted to graduate in academic year {{$academic_year}}</p>
         @else
-            <p>to be permitted to {{$student->grade_level + 1}} in academic year {{$academic_year}}</p>
+            <p>to be permitted to {{$student->grade_level + 1}} in academic year {{$academic_year+1}}</p>
         @endif
     </div>
 </div>
