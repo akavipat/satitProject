@@ -85,6 +85,8 @@
                 <th scope="col">Course ID</th>
                 <th scope="col">Course Name</th>
                 <th scope="col">Semester</th>
+                <th scope="col">In Class</th>
+                <th scope="col">Practice</th>
                 <th scope="col">Credits</th>
                 <th scope="col">Elective</th>
                 <th scope="col">Edit</th>
@@ -100,6 +102,8 @@
                     <td>{{ $sub->course_id }}</td>
                     <td>{{ $sub->course_name }}</td>
                     <td>{{ $sub->semester }}</td>
+                    <td>{{ $sub->inclass }}</td>
+                    <td>{{ $sub->practice }}</td>
                     <td>{{ $sub->credits }}</td>
 
                     @if ($sub->is_elective === 1)
@@ -159,6 +163,20 @@
                                     </div>
 
                                     <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label text-right">In class :</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" class="form-control" name="inclass" value='{{ $sub->inclass }}'>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label text-right">Practice :</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" class="form-control" name="practice" value='{{ $sub->practice }}'>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
                                         <label class="col-sm-3 col-form-label text-right">Credit :</label>
                                         <div class="col-sm-5">
                                             <input type="number" class="form-control" name="credit"
@@ -185,7 +203,7 @@
 
 
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-success">Edit</button>
+                                        <button type="submit" class="btn btn-success">Save</button>
                                 </form>
 
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -308,6 +326,16 @@
                                         <td class="text-right">Course Name :</td>
                                         <td><input type="text" class="form-control" name="course_name"
                                                    value='{{ $sub->course_name }}' readonly></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="text-right">In Class :</td>
+                                        <td><input type="text" class="form-control" name="inclass" ></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="text-right">Practice :</td>
+                                        <td><input type="text" class="form-control" name="practice" ></td>
                                     </tr>
 
                                     <tr>

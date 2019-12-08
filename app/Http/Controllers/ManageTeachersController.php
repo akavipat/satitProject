@@ -55,7 +55,6 @@ class ManageTeachersController extends Controller
             $query_fail = "Cannot add new teacher information. ID ".$teacher->teacher_id." may already exists or there is a problem with the database.";
         }
 
-
         $teachers  = Teacher::join('teacher_status','teachers.teacher_status','=','teacher_status.teacher_status')
             ->select('teachers.teacher_id','teachers.name_title','teachers.firstname','teachers.lastname','teacher_status.teacher_status_text')
             ->orderBy('teachers.teacher_id','asc')

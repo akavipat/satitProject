@@ -158,7 +158,7 @@ class ManageAcademicController extends Controller
                     $join->on('curriculums.curriculum_year', '=', 'offered_courses.curriculum_year');
                 })
                 ->select('offered_courses.open_course_id', 'academic_year.academic_year', 'curriculums.course_id', 'academic_year.grade_level', 'academic_year.room'
-                    , 'curriculums.course_name', 'offered_courses.credits', 'offered_courses.semester', 'offered_courses.is_elective')
+                    , 'curriculums.course_name', 'offered_courses.inclass', 'offered_courses.practice','offered_courses.credits', 'offered_courses.semester', 'offered_courses.is_elective')
                 ->get();
             $selCur = $academic[0]->curriculum_year;
             $allSub = Curriculum::where('min_grade_level', '<=', $grade)
@@ -234,7 +234,7 @@ class ManageAcademicController extends Controller
         $grade = $request->input('grade');
         $year = $request->input('year');
         $academic = Academic_Year::where('academic_year', $year)->where('grade_level', $grade)->orderBy('room', 'desc')->first();
-        Log::info($academic);
+        //Log::info($academic);
         if(!$academic) {
             $room = 0;
             // Get the latest curriculum year
@@ -601,14 +601,14 @@ return response()->json(['Status' => 'No previous year student, Can not import',
 
     public function importTeacherFromPrevious(Request $request)
     {
-        Log::info("Import Teacher");
+        //Log::info("Import Teacher");
         try {
             $activeYear = $this->getCurrentActiveYear();
-            Log::info("Active year is:" . $activeYear);
+            //Log::info("Active year is:" . $activeYear);
             $year = $request->input('year');
-            Log::info("Year is:" . $year);
+            //Log::info("Year is:" . $year);
             if ($year < $activeYear) {
-                Log::info("Year < active");
+                //Log::info("Year < active");
                 return response()->json(['Status' => "Academic Year " . $year . " could not edit"], 200);
             }
             $teachers = Homeroom::where('academic_year', $year - 1)
@@ -618,20 +618,20 @@ return response()->json(['Status' => 'No previous year student, Can not import',
 if($checkAca === null){ // No classroom
 return response()->json(['Status' => 'No previous year teacher, Can not import', 200]);
 }*/
-            Log::info("teachers");
+            //Log::info("teachers");
 
 
             $checkTeacherExistYear = Homeroom::leftJoin('academic_year', 'homeroom.classroom_id', 'academic_year.classroom_id')
                 ->where('academic_year.academic_year', $year)
                 ->delete();
-            Log::info("Delete successful");
+            //Log::info("Delete successful");
             $query = Homeroom::leftJoin('academic_year', 'homeroom.classroom_id', 'academic_year.classroom_id')
                 ->where('academic_year.academic_year', $year);
-            Log::info("Remove by SQL");
-            Log::info($query->toSql());
-            Log::info($query->getBindings());
+            //Log::info("Remove by SQL");
+            //Log::info($query->toSql());
+            //Log::info($query->getBindings());
         } catch (\Exception $e) {
-            Log::info("Error : " . $e->getMessage());
+            //Log::info("Error : " . $e->getMessage());
             // do task when error
             return response()->json(['Status' => $e->getMessage()], 200);
         }
@@ -706,6 +706,8 @@ return response()->json(['Status' => 'No previous year teacher, Can not import',
 
     public function editSubject(Request $request)
     {
+        Log::info("Edit Subject");
+        Log::info($request);
         $openID = $request->input('open_id');
         $checkOpen = Offered_Courses::where('open_course_id', $openID)
             ->first();
@@ -716,13 +718,14 @@ return response()->json(['Status' => 'No previous year teacher, Can not import',
             $checkOpen = Offered_Courses::where('open_course_id', $openID)
                 ->update(['semester' => $request->input('semester'),
                     'credits' => $request->input('credit'),
+                    'practice' => $request->input('practice'),
+                    'inclass' => $request->input('inclass'),
                     'is_elective' => $request->input('elective')]);
 
         } catch (\Exception $e) {
             return response()->json(['Status' => $e->getMessage()], 200);
         }
         return response()->json(['Status' => 'success'], 200);
-
     }
 
     public function removeSubject(Request $request)
@@ -740,7 +743,6 @@ return response()->json(['Status' => 'No previous year teacher, Can not import',
             return response()->json(['Status' => $e->getMessage()], 200);
         }
         return response()->json(['Status' => 'success'], 200);
-
     }
 
     public function addSubject(Request $request)
@@ -801,6 +803,8 @@ return response()->json(['Status' => 'No previous year teacher, Can not import',
             $createStuClass = new Offered_Courses;
             $createStuClass->classroom_id = $checkAca->classroom_id;
             $createStuClass->semester = $request->input('semester');
+            $createStuClass->practice = $request->input('practice');
+            $createStuClass->inclass = $request->input('inclass');
             $createStuClass->credits = $request->input('credit');
             $createStuClass->is_elective = $request->input('elective');
             $createStuClass->course_id = $request->input('course_id');
