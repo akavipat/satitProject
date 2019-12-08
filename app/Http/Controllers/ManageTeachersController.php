@@ -9,7 +9,7 @@ class ManageTeachersController extends Controller
 {
   public function index(){
     $teachers  = Teacher::join('teacher_status','teachers.teacher_status','=','teacher_status.teacher_status')
-    ->select('teachers.teacher_id','teachers.firstname','teachers.lastname','teacher_status.teacher_status_text')
+    ->select('teachers.teacher_id','teachers.name_title','teachers.firstname','teachers.lastname','teacher_status.teacher_status_text')
     ->orderBy('teachers.teacher_id','asc')
     ->get();
     //dd($teachers);
@@ -22,6 +22,7 @@ class ManageTeachersController extends Controller
       //
 
       $teacher  = Teacher::all()->where('teacher_id', $request->input('teacherID'))->first();
+      $teacher->name_title=$request->input('name_title');
       $teacher->firstname=$request->input('firstname');
       $teacher->lastname=$request->input('lastname');
       $teacher->teacher_status=$request->input('status');
@@ -29,7 +30,7 @@ class ManageTeachersController extends Controller
       $teacher->save();
 
       $teachers  = Teacher::join('teacher_status','teachers.teacher_status','=','teacher_status.teacher_status')
-      ->select('teachers.teacher_id','teachers.firstname','teachers.lastname','teacher_status.teacher_status_text')
+      ->select('teachers.teacher_id','teachers.name_title','teachers.firstname','teachers.lastname','teacher_status.teacher_status_text')
       ->orderBy('teachers.teacher_id','asc')
       ->get();
       return view('manageTeachers.index' , ['teachers' => $teachers,'query_fail' => ""]);
@@ -41,6 +42,7 @@ class ManageTeachersController extends Controller
 
         $teacher  = new Teacher();
         $teacher->teacher_id=$request->input('teacherID');
+        $teacher->name_title=$request->input('name_title');
         $teacher->firstname=$request->input('firstname');
         $teacher->lastname=$request->input('lastname');
         $teacher->teacher_status=$request->input('status');
@@ -55,7 +57,7 @@ class ManageTeachersController extends Controller
 
 
         $teachers  = Teacher::join('teacher_status','teachers.teacher_status','=','teacher_status.teacher_status')
-            ->select('teachers.teacher_id','teachers.firstname','teachers.lastname','teacher_status.teacher_status_text')
+            ->select('teachers.teacher_id','teachers.name_title','teachers.firstname','teachers.lastname','teacher_status.teacher_status_text')
             ->orderBy('teachers.teacher_id','asc')
             ->get();
         return view('manageTeachers.index' , ['teachers' => $teachers,'query_fail' => $query_fail]);

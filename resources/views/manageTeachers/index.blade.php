@@ -70,6 +70,7 @@
         <tr>
             <th scope="col">No.</th>
             <th scope="col">ID</th>
+            <th scope="col">Title</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
             <th scope="col">Status</th>
@@ -84,6 +85,7 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $teacher->teacher_id }}</td>
+                <td>{{ $teacher->name_title }}</td>
                 <td>{{ $teacher->firstname }}</td>
                 <td>{{ $teacher->lastname }}</td>
                 <td>{{ $teacher->teacher_status_text }}</td>
@@ -113,6 +115,12 @@
                                            value='{{ $teacher->teacher_id }}' readonly>
                                     <input hidden type="text" name="teacherID"
                                            value='{{ $teacher->teacher_id }}'>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-form-label">Title: </label>
+                                    <input type="text" class="form-control" name="name_title"
+                                           value='{{ $teacher->name_title }}'>
                                 </div>
 
                                 <div class="form-group">
@@ -175,6 +183,10 @@
                         <div class="form-group">
                             <label class="col-form-label">ID:</label>
                             <input type="text" class="form-control" name="teacherID">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">Title: </label>
+                            <input type="text" class="form-control" name="name_title">
                         </div>
                         <div class="form-group ">
                             <label class="col-form-label">First name: </label>
