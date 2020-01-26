@@ -977,20 +977,42 @@ return response()->json(['Status' => 'No previous year student, Can not import',
     }
 
     public function editSchoolDays($year, Request $request){
-        // Check if there is a form
-        Log::info($request);
-
+        $input = $request->input();
+        Log::info($input);
         // Check if there is an update
-        Log::info("Check existance");
-        if(array_key_exists("update",$request)){
-            //Extract information from request
-            Log::info("Remove update");
-            Log::info($request["update"]);
-            unset($request["update"]);
-            unset($request['_token']);
-            Log::info($request);
+        if(array_key_exists('update',$input)){
+            // Remove update and token
+            unset($input["update"]);
+            unset($input['_token']);
+
+            Log::info($input);
+
+            // Extract entry into array
+            foreach ($input as $key => $days){
+                // Split key
+                $grade_sem = explode('-',$key);
+                //Sanity check
+                // Check that we can explode to 2
+                Log::info($key);
+                Log::info($days);
+                if( count($grade_sem) == 2 &&
+                    is_numeric($grade_sem[0]) &&
+                    is_numeric($grade_sem[1]) &&
+                    is_numeric($days)) {
+                    School_Days::where(
+                            [
+                                'academic_year' => $year,
+                                'grade_level' => $grade_sem[0],
+                                'semester' => $grade_sem[1]
+                            ])->update(['total_days' => $days]);
+                }else{
+                    Log::error("Wrong key");
+                    Log::error($key);
+                }
+            }
         }
 
+        Log::info("Get School Days data");
         // Get school day data
         $school_days = School_Days::where('academic_year',$year)->get();
         // Convert school day to 2D array where row is year and column is semester
@@ -998,8 +1020,6 @@ return response()->json(['Status' => 'No previous year student, Can not import',
         foreach ($school_days as $detail) {
             $school_day_table[$detail->grade_level][$detail->semester] = $detail->total_days;
         }
-
-        // Check if empty then populate with values from previous year or 0
 
         return view('manageAcademic.editSchoolDays',
             ['cur_year' => $year, 'school_days' => $school_day_table]);

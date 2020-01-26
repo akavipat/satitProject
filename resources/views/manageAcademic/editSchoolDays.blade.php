@@ -77,7 +77,7 @@
     <div class="row">
         <div class="col-xs-1"></div>
         <div class="col-xs-3">
-            <button class="btn btn-success" type="submit" form="schooldaytable" value="Submit">Save & Close</button>
+            <button class="btn btn-success" type="submit" form="schooldaytable" value="Submit">Save</button>
         </div>
         <div class="col-xs-4">
             <button class="btn btn-primary" onclick="window.location.href='/editAcademic/{{$cur_year}}'">
