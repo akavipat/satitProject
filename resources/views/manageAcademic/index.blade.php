@@ -1,3 +1,5 @@
+<!-- To be removed --?>
+
 <!-- JQuery -->
 <script src="/css/jquery/jquery-3.4.1.min.js"></script>
 <!-- Data Table -->

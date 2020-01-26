@@ -23,3 +23,15 @@ h1 {
     padding-bottom: 5px;
     padding-right: 5px;
 }
+
+table.table-fit {
+    margin: auto;
+    width: auto !important;
+    table-layout: auto !important;
+}
+table.table-fit thead th, table.table-fit tfoot th {
+    width: auto !important;
+}
+table.table-fit tbody td, table.table-fit tfoot td {
+    width: auto !important;
+}

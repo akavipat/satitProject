@@ -99,6 +99,13 @@
 
 <footer class="page-footer text-center">
     <form class="form-inline">
+        <div class="form-group">
+            <button type="button"
+                    class="btn btn-primary"
+                    onclick="window.location.href='/editSchoolDays/{{$cur_year}}'">
+                Edit School Days
+            </button>
+        </div>
         <div class="form-group green_group">
             <label for="selGrade">Adjust rooms for grade :</label>
             <select id="selGrade" class="browser-default custom-select" name="selCur">
@@ -285,6 +292,7 @@
                         alert("Create new Academic year succeed");
                         location.reload();
                     } else {
+                        console.log(data);
                         alert(data.Status);
                     }
                 }

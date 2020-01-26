@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\School_Days;
+use App\SystemConstant;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Academic_Year;
@@ -101,28 +104,73 @@ class ManageAcademicController extends Controller
         return response()->json(['Status' => "success"], 200);
     }
 
-    public function addNewAcademic()
-    {
+    public function addNewAcademic(){
+        $year = Academic_Year::orderBy('academic_year', 'desc')->first();
+        $academic = Academic_Year::where('academic_year', $year->academic_year)->get();
+        $new_year = $year->academic_year+1;
 
-        $getYear = Academic_Year::orderBy('academic_year', 'desc')->first();
-        $academic = Academic_Year::where('academic_year', $getYear->academic_year)->get();
+        $school_days = School_Days::where('academic_year',$year->academic_year)->get();
+
+        DB::beginTransaction();
 
         try {
-            foreach ($academic as $aca) {
-                $createNewYear = $aca->replicate();
-                $createNewYear->academic_year = ($aca->academic_year) + 1;
-                $createNewYear->classroom_id = null;
-                $createNewYear->save();
+            foreach ($academic as $entry) {
+                $temp = $entry->replicate();
+                $temp->academic_year = $new_year;
+                $temp->classroom_id = null;
+                $temp->save();
             }
         } catch (\Exception $e) {
             // do task when error
+            Log::error($e);
+            DB::rollback();
             return response()->json(['Status' => $e->getMessage()], 200);
+        }
+        Log::info("Pass new academic");
 
+        // Also replicate date time if possible
+        try {
+            if($school_days->count() < 1) {
+
+                Log::info("No old data");
+
+                $data = array();
+                for($gradelevel = 1;
+                    $gradelevel <= SystemConstant::MAX_GRADE_LEVEL;
+                    $gradelevel++) {
+                    for ($semester = 1;
+                         $semester <= SystemConstant::TOTAL_SEMESTERS;
+                         $semester++) {
+                        array_push($data,
+                            [
+                                'academic_year' => $new_year,
+                                'grade_level' => $gradelevel,
+                                'semester' => $semester,
+                                'total_days' => 1
+                            ]);
+                    }
+                }
+                School_Days::insert($data);
+            }else{
+                Log::info("Has old data");
+                foreach ($school_days as $entry) {
+                    $temp = $entry->replicate();
+                    $temp->academic_year = $new_year;
+                    $temp->save();
+                }
+            }
+        } catch (\Exception $e) {
+            // do task when error
+            Log::error($e);
+            DB::rollback();
+            return response()->json(['Status' => $e->getMessage()], 500);
         }
 
+        DB::commit();
 
-        return response()->json(['Status' => "success"], 200);
+        return response()->json(['Status' => 'success'], 200);
     }
+
 
 
     public function assignSubject($year, $grade, $room, Request $request)
@@ -684,26 +732,6 @@ return response()->json(['Status' => 'No previous year teacher, Can not import',
 
     // End Teacher
 
-
-    public function createNewAcademic(Request $request)
-    {
-        $academic = Academic_Year::orderBy('academic_year', 'desc')->groupBy('academic_year')->first();
-        $year = $academic->academic_year;
-
-        try {
-            $temp = $academic->replicate();
-            $temp->academic_year = $year + 1;
-            $temp->classroom_id = null;
-            $temp->save();
-
-        } catch (\Exception $e) {
-            // do task when error
-            return response()->json(['Status' => $e->getMessage()], 200);
-
-        }
-        return response()->json(['Status' => 'success'], 200);
-    }
-
     public function editSubject(Request $request)
     {
         Log::info("Edit Subject");
@@ -946,5 +974,34 @@ return response()->json(['Status' => 'No previous year student, Can not import',
         }
         $redi = "assignSubject/" . $year . "/" . $grade . "/" . $room;
         return redirect($redi);
+    }
+
+    public function editSchoolDays($year, Request $request){
+        // Check if there is a form
+        Log::info($request);
+
+        // Check if there is an update
+        Log::info("Check existance");
+        if(array_key_exists("update",$request)){
+            //Extract information from request
+            Log::info("Remove update");
+            Log::info($request["update"]);
+            unset($request["update"]);
+            unset($request['_token']);
+            Log::info($request);
+        }
+
+        // Get school day data
+        $school_days = School_Days::where('academic_year',$year)->get();
+        // Convert school day to 2D array where row is year and column is semester
+        $school_day_table = array();
+        foreach ($school_days as $detail) {
+            $school_day_table[$detail->grade_level][$detail->semester] = $detail->total_days;
+        }
+
+        // Check if empty then populate with values from previous year or 0
+
+        return view('manageAcademic.editSchoolDays',
+            ['cur_year' => $year, 'school_days' => $school_day_table]);
     }
 }

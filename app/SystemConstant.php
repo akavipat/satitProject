@@ -45,6 +45,7 @@ class SystemConstant
     const NA_GRADE = "-";
 
     const TOTAL_SEMESTERS = 2;
+    const MAX_GRADE_LEVEL = 12;
 
     const MIN_TO_ZERO = 0.0001;
 

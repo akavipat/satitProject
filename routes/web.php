@@ -55,14 +55,15 @@ Route::get('/manageTeachers', 'ManageTeachersController@index');
 Route::put('/manageTeachers/update', 'ManageTeachersController@update');
 Route::put('/manageTeachers/add', 'ManageTeachersController@add');
 
-//Route::get('/manageAcademic', 'ManageAcademicController@index');
 Route::get('/manageAcademic', 'ManageAcademicController@editCurAcademicYear');
-Route::post('/manageAcademic/createNewAcademic', 'ManageAcademicController@createNewAcademic');
 Route::post('/manageAcademic/changeSelYear', 'ManageAcademicController@changeEditAcademicYear');
 Route::post('/manageAcademic/addNewAca', 'ManageAcademicController@addNewAcademic');
 Route::post('/manageAcademic/activeAcademicYear', 'ManageAcademicController@activeAcademicYear');
 Route::get('/editCurrentAcademic', 'ManageAcademicController@editCurAcademicYear');
 Route::get('/editAcademic/{year}', 'ManageAcademicController@editAcademicYear');
+Route::get('/editSchoolDays/{year}', 'ManageAcademicController@editSchoolDays');
+Route::post('/editSchoolDays/{year}', 'ManageAcademicController@editSchoolDays');
+
 // Subject Mangement
 Route::get('/assignSubject/{year}/{grade}/{room}', 'ManageAcademicController@assignSubject');
 Route::post('/assignSubject/changeSelYear', 'ManageAcademicController@changeCurYear');
