@@ -791,7 +791,7 @@ return response()->json(['Status' => 'No previous year teacher, Can not import',
         if ($semester < 1 || $semester > 3) {
             return response()->json(['Status' => "Semester could not be : " . $semester], 200);
         }
-        if ($credit < 0 || $credit > 3) {
+        if ($credit < 0 ) {
             return response()->json(['Status' => "Credit could not be : " . $credit], 200);
         }
         //$curYear = Curriculum::orderBy('curriculum_year', 'desc')->groupBy('curriculum_year')->get();

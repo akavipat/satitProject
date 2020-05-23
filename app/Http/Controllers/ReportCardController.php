@@ -740,7 +740,13 @@ class ReportCardController extends Controller
             if ($total_sem1_credit < SystemConstant::MIN_TO_ZERO) {
                 $gpa = 0;
             } else {
-                $gpa = round($gpa / $total_sem1_credit, 2);
+                //$gpa = round($gpa / $total_sem1_credit, 2);
+                /*  Method changed on 23/5/2020  The rounding will 
+                    be round off same as higher year.  The
+                    rounding off is assumed to be execute below 
+                    before returning value.  At the time of writing is at
+                    line 819 */
+                $gpa = $gpa / $total_sem1_credit;
             }
         } else {
             $gpa = $semester_1_gpa;
@@ -799,12 +805,18 @@ class ReportCardController extends Controller
                 $gpa /= $total_credit;
             }
         }
+
         if($grade_level <=6){
             // total subject in semester 1 and 2 should be equal
-            $semester_2_gpa = $semester_2_gpa / $total_sem1_credit;
+            if ($total_sem1_credit < SystemConstant::MIN_TO_ZERO) {
+                $semester_2_gpa = 0;
+            }else{
+                $semester_2_gpa = $semester_2_gpa / $total_sem1_credit;
+            }
         }else {
 
         }
+
         // Properly round gpas
         $semester_1_gpa = floor($semester_1_gpa * 100 ) / 100;
         $semester_2_gpa = floor($semester_2_gpa * 100 ) / 100;

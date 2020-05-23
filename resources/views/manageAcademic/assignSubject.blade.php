@@ -158,7 +158,7 @@
                                         <label class="col-sm-3 col-form-label text-right">Semester :</label>
                                         <div class="col-sm-5">
                                             <input type="number" class="form-control" name="semester"
-                                                   value='{{ $sub->semester }}' min="1" max="3" required required>
+                                                   value='{{ $sub->semester }}' min="1" max="3" required>
                                         </div>
                                     </div>
 
@@ -180,7 +180,7 @@
                                         <label class="col-sm-3 col-form-label text-right">Credit :</label>
                                         <div class="col-sm-5">
                                             <input type="number" class="form-control" name="credit"
-                                                   value='{{ $sub->credits }}' min="0" max="3" step="0.5" required
+                                                   value='{{ $sub->credits }}' min="0" step="0.5" required
                                                    required>
                                         </div>
                                     </div>
@@ -346,7 +346,7 @@
 
                                     <tr>
                                         <td class="text-right">Credit :</td>
-                                        <td><input type="number" class="form-control" name="credit" min="0" max="3"
+                                        <td><input type="number" class="form-control" name="credit" min="0"
                                                    step=0.5 required></td>
                                     </tr>
 
