@@ -198,7 +198,10 @@ class ReportCardController extends Controller
 
         // Create template for all grade query
         $grade = Offered_Courses::where('classroom_id', $grade_level->classroom_id)
-            ->join('curriculums', 'curriculums.course_id', 'offered_courses.course_id')
+            ->join('curriculums', function ($join) {
+                $join->on('curriculums.course_id', 'offered_courses.course_id');
+                $join->on('curriculums.curriculum_year', 'offered_courses.curriculum_year');
+            })
             ->leftJoinSub($student_latest_grades, 'student_latest_grades', function ($join) {
                 $join->on('offered_courses.open_course_id', 'student_latest_grades.open_course_id');
             })
@@ -255,12 +258,16 @@ class ReportCardController extends Controller
 
         // Create template for all activity query
         $acts = Offered_Courses::where('classroom_id', $grade_level->classroom_id)
-            ->join('curriculums', 'curriculums.course_id', 'offered_courses.course_id')
+            ->join('curriculums', function ($join) {
+                $join->on('curriculums.course_id', 'offered_courses.course_id');
+                $join->on('curriculums.curriculum_year', 'offered_courses.curriculum_year');
+            })
             ->leftJoinSub($student_latest_acts, 'student_latest_acts', function ($join) {
                 $join->on('offered_courses.open_course_id', 'student_latest_acts.open_course_id');
             })
             ->where('curriculums.is_activity', '1')
-            ->select('student_latest_acts.grade_status', 'student_latest_acts.grade_status_text', 'offered_courses.*', 'curriculums.*')
+            ->select('student_latest_acts.grade_status', 'student_latest_acts.grade_status_text',
+                'offered_courses.*', 'curriculums.*')
             ->orderby('curriculums.course_name');
 
         $activity_semester1 = (clone $acts)->where('offered_courses.semester', '1')->get();
