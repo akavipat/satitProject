@@ -383,6 +383,7 @@ class ReportCardController extends Controller
             ->where('valid', 1)
             ->join('teachers', 'teachers.teacher_id', 'homeroom.teacher_id')
             ->select('name_title', 'firstname', 'lastname')
+	    ->orderBy('homeroom.created_at')
             ->get();
 
         $teacher_names = array();

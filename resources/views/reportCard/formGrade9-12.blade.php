@@ -219,8 +219,6 @@
         <p>3 Good</p>
         <p>2 Satisfactory</p>
         <p>1 Needs Improvement</p>
-        <p>0 Fail</p>
-
     </div>
 </div>
 

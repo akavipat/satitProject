@@ -607,6 +607,7 @@ return response()->json(['Status' => 'No previous year student, Can not import',
             $createTeacherClass = new Homeroom;
             $createTeacherClass->classroom_id = $checkAca[0]->classroom_id;
             $createTeacherClass->teacher_id = $teacher_id;
+	    $createTeacherClass->valid = 1;
             $createTeacherClass->save();
         } catch (\Exception $e) {
             // do task when error

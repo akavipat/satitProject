@@ -44,11 +44,11 @@
     </tr>
 
     @foreach($grade_semester1 as $key => $grade )
-        <tr>
-            <td style="border-right:2px solid black;">{{$grade['course_name']}}</td>
+        <tr >
+            <td style="height: 0.3cm; border-right:2px solid black;">{{$grade['course_name']}}</td>
             <td>{{$grade['course_id']}}</td>
-            <td class="center-cell">{{$grade['inclass']}}</td>
-            <td class="center-cell">{{$grade['practice']}}</td>
+            <td class="center-cell" style="padding: 1px 1px; ">{{$grade['inclass']}}</td>
+            <td class="center-cell" style="padding: 1px 1px; ">{{$grade['practice']}}</td>
             <td class="center-cell" style="border-right:2px solid black;">{{$grade['credits']}}</td>
 
             <td class="center-cell">{{$grade['quarter1_sem1']}}</td>
@@ -191,8 +191,6 @@
                 <p>3 Good</p>
                 <p>2 Satisfactory</p>
                 <p>1 Needs Improvement</p>
-                <p>0 Fail</p>
-
             </div>
         </div>
 
